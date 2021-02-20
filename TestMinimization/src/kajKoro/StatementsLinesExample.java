@@ -59,38 +59,13 @@ public class StatementsLinesExample {
                                     		 hm.put(word[1], word[2]);
                                      		//System.out.println(hm);
                                      		Iterator<Entry<String, String>> it = hm.entrySet().iterator();
-                                     		while(it.hasNext())
-                                         	{
-                                         		Map.Entry element = (Map.Entry)it.next();
-                                         		
-                                         		String hobe = ((String)element.getKey());
-                                         		
-                                         		
-                                         		 if(sundorLine.contains(" "+hobe+")"))
-                                         			 System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                         		else if(sundorLine.contains("("+hobe+")"))
-                                         			System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                         		else if(sundorLine.contains("("+hobe+","))
-                                         			System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                         		else if(sundorLine.contains("("+hobe+" "))
-                                         			System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                         		else if(sundorLine.contains("("+hobe+"."))
-                                         			System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                         	
-                                         	}	
-                                             
+                                     		
                                              
                                     		//another case
                                     		
                                     		
                                     	 }
-                                    	 if (count>=2) {
-                                   			System.out.println("Hurrahhh!!!!!Indirect smell found. Method starts at Line "+node.getBegin());
-                                   			
-                                   			System.out.println(sundorLine);
-                                   	
-                                   		}
-                                    	 	 
+                                    	 
                                      }
                                 	
                                  }
