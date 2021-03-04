@@ -17,6 +17,8 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Strings;
 
+import javassist.bytecode.Descriptor.Iterator;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -89,17 +91,14 @@ public class MethodParser {
                 new RuntimeException(e);
             }
             
-
-            // demo output print 
-       
-            	
-            System.out.println(outputMethodSet.toString());
+     	
+            //System.out.println(outputMethodSet.toString());
             
             
 //            for(int i=0;i<minimizer.size();i++) {
 //            	//System.out.println(minimizer.get(i).stmts.toString());
 //            }
-            
+           
             String output="";
             int count=0;
             //find redundant Test Statements
@@ -108,32 +107,81 @@ public class MethodParser {
     			for(int j=i+1;j<minimizer.size();j++) {
     				for(int x=0;x<minimizer.get(i).stmts.size();x++){
     					for(int y=0;y<minimizer.get(j).stmts.size();y++) {
+    						//System.out.println(minimizer.get(i).stmts.get(x));
     						if(minimizer.get(i).stmts.get(x).equals(minimizer.get(j).stmts.get(y))) {
     							
     							System.err.println(minimizer.get(i).name+" and "+minimizer.get(j).name+" have redundant test statements");
         						
-    							System.out.println(minimizer.get(i).stmts.get(x));
-    							//
-    							//
+    							System.err.println(minimizer.get(i).stmts.get(x));
     							
+    							//
+    							Map<String, String> methodMapTemp1 = new HashMap<String, String>();
+    							Map<String, String> methodMapTemp2 = new HashMap<String, String>();
+    							Set<String> nowStatements =  new HashSet<String>();
     							
-    							output+=minimizer.get(i).stmts.get(x);
-    							//System.out.println(outputMethodSet);	
+   							 	for (Map.Entry<String, String> set : methodMa.entrySet()) {
+   							 		if((set.getKey().contains(minimizer.get(i).name)) ) {
+   							 			
+   							 		String[] Split= set.getValue().split("\\n");
+   							 		
+   			                        for(int m=0;m<Split.length;m++) {
+   											String singleStatement=Split[m];
+   										
+   											if(singleStatement.contains(";")) {
+   											
+   												nowStatements.add(singleStatement);
+   											
+   											}	
+   											
+   			                         }
+   							 			
+   							 			//nowStatements.add(set.getValue());
+   							 			methodMapTemp1.put(set.getKey(), set.getValue());
+										//System.out.println(set.getKey() + "" + set.getValue());
+   							 		}
+   								
+   							 	}
+   							 	for (Map.Entry<String, String> set : methodMa.entrySet()) {
+							 		if((set.getKey().contains(minimizer.get(j).name)) ) {
+							 			
+							 			String[] Split= set.getValue().split("\\n");
+							 			for(int n=0;n<Split.length;n++) {
+   											String singleStatement=Split[n];
+   										
+   											if(singleStatement.contains(";")) {
+   											
+   												nowStatements.add(singleStatement);
+   											
+   											}	
+   											
+   			                         }
+							 			
+							 			//nowStatements.add(set.getValue());
+							 			methodMapTemp1.put(set.getKey(), set.getValue());
+										//System.out.println(set.getKey() + "" + set.getValue());
+							 		}
+								
+							 	}
+   							 	//methodMapTemp1.putAll(methodMapTemp2);
+   							 	System.out.println(nowStatements);
+   							 	//System.err.println(methodMapTemp1);
+    							output=output.concat(minimizer.get(i).stmts.get(x));
+    							
+    							//output+=minimizer.get(i).stmts.get(x);
+    								
     						}
     						
     					}
     				}
     			}
     		}
+            System.out.println(output);
+            System.err.println("Eshan");
+            
+            
+               
            
             
-            for(int i=0;i<methodMa.size();i++){
-            	ArrayList<String> values1 = new ArrayList<>(methodMa.values());
-            	for (String s : values1) {
-            		//System. out. println(s);
-            	}
-            	
-            }
 //            
 //            Map<String, String> methodTemp= new HashMap<String, String>();
 //           
