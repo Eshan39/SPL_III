@@ -46,7 +46,8 @@ public class MethodParser {
                     	//method body
                         String x =String.valueOf(n.getBody());
                         
-                        String methodName= n.getDeclarationAsString();
+                        String methName= n.getDeclarationAsString();
+                        String methodName=methName.replace("void ","");
                         //System.out.println(methodName);
                         //System.out.println(x);
                         methodMa.put(methodName, x);
@@ -79,7 +80,7 @@ public class MethodParser {
                        Statements.removeAll(Statements);
                   
          
-                        super.visit(n, arg);
+                       super.visit(n, arg);
                         //System.out.println(x);
                     }
                     
@@ -90,133 +91,108 @@ public class MethodParser {
             } catch (ParseException | IOException e) {
                 new RuntimeException(e);
             }
-            
-     	
-            //System.out.println(outputMethodSet.toString());
-            for (Map.Entry<String, String> set : methodMa.entrySet()) {	
-					System.out.println(set.getKey() + " " + set.getValue());
-			 }
-            
-//            for(int i=0;i<minimizer.size();i++) {
-//            	//System.out.println(minimizer.get(i).stmts.toString());
-//            }
            
             String output="";
             int count=0;
             //find redundant Test Statements
             
             Set<String> redundant= new HashSet<>();
+            Set<String> outputSet = new HashSet<>();
 
             
             for(int i=0;i<minimizer.size();i++) {
-    			for(int j=i+1;j<minimizer.size();j++) {
-    				for(int x=0;x<minimizer.get(i).stmts.size();x++){
-    					for(int y=0;y<minimizer.get(j).stmts.size();y++) {
-    						//System.out.println(minimizer.get(i).stmts.get(x));
-    						if(minimizer.get(i).stmts.get(x).equals(minimizer.get(j).stmts.get(y))) {
-    							
-    							System.err.println(minimizer.get(i).name+" and "+minimizer.get(j).name+" have redundant test statements");
-        						redundant.add(minimizer.get(i).name+" and "+minimizer.get(j).name+" have redundant test statements");
-    							System.err.println(minimizer.get(i).stmts.get(x));
-
-   							 	minimizer.remove(minimizer.get(j).name);
-   							 	minimizer.remove(minimizer.get(j).stmts);
-    							//
-    							Map<String, String> methodMapTemp1 = new HashMap<String, String>();
-    							Map<String, String> methodMapTemp2 = new HashMap<String, String>();
-    				            Set<String> nowStatements =  new HashSet<String>();
-    							
-   							 	for (Map.Entry<String, String> set : methodMa.entrySet()) {
-   							 		if((set.getKey().contains(minimizer.get(i).name)) ) {
-   							 			
-	   							 		String[] Split= set.getValue().split("\\n");
-	   							  		
-	   			                        for(int m=0;m<Split.length;m++) {
-	   										String singleStatement=Split[m];
-	   										
-	   										if(singleStatement.contains(";")) {
-	   											
-	   											nowStatements.add(singleStatement);
-	   											
-	   										}	
-	   											
-	   			                         }
-   							 			
-   							 			//nowStatements.add(set.getValue());
-   							 			//methodMapTemp1.put(set.getKey(), set.getValue());
-										//System.out.println(set.getKey() + "" + set.getValue());
-   							 		}
-   								
-   							 	}
-   							 	for (Map.Entry<String, String> set : methodMa.entrySet()) {
-							 		if((set.getKey().contains(minimizer.get(j).name)) ) {
-							 			
-							 			String[] Split= set.getValue().split("\\n");
-							 			for(int n=0;n<Split.length;n++) {
-   											String singleStatement=Split[n];
-   										
-   											if(singleStatement.contains(";")) {
-   											
-   												nowStatements.add(singleStatement);
-   											
-   											}	
-   											
-							 			}
-							 			
-							 			//nowStatements.add(set.getValue());
-							 			//methodMapTemp1.computeIfPresent(minimizer.get(i).name,(k,v)->v);
-							 			//methodMapTemp1.put(set.getKey(), set.getValue());
-										//System.out.println(set.getKey() + "" + set.getValue());
-							 		}
-								
-							 	}
-   							 	//methodMapTemp1.putAll(methodMapTemp2);
-   							 	
-   							 	for(String merge : nowStatements){
-								 	System.out.println(merge);
-								}
-   							 	//System.err.println(methodMapTemp1);
-    							//output=output.concat(minimizer.get(i).stmts.get(x));
-    							
-    							//output+=minimizer.get(i).stmts.get(x);
-   							 	
-    								
-    						}
-    						
-    					}
-    				
-    					
-    				}
+            	if (minimizer.get(i).merged) continue;
+    			for(int j = i+1; j < minimizer.size(); j++) {
+    				if (minimizer.get(j).merged) continue;
+    				if (!shouldMerge(minimizer.get(i), minimizer.get(j))) continue;
+    				MinimizationClass newMethod = merge(minimizer.get(i), minimizer.get(j));
+    				minimizer.get(i).merged = true;
+    				minimizer.get(j).merged = true;
+    				minimizer.add(newMethod);
+    				break;
     			}
     		}
-            
-
-            for(String stock : redundant){
-            	System.out.println(stock);
+            for (String line : minimizer.get(minimizer.size()-1).stmts) 
+            { 
+                if(line.contains("assert")) {
+                	String newLine=line;
+                	System.out.println(newLine);
+                }
             }
-           
-    	
-            for(int i=0;i<minimizer.size();i++) {
-            	
-            	System.out.println(minimizer.get(i).name);
-            	System.out.println(minimizer.get(i).stmts);
-            	
-            }
-            //System.err.println("Eshan");
             
-            
-            // redundant test statements
-            
-//            for(int i=0;i<Statements.size();i++) {
-//            	//System.out.println(Statements.get(i));	
-//            	for(int j=0;j<Statements.size();j++) {
-//            		if( (Statements.get(i).equals(Statements.get(j))&& (i!=j))) {
-//            			//System.out.println(Statements.get(i));
-//            		}
-//            	}
-//            }
               
         }).explore(projectDir);
     }
+    
+    public static MinimizationClass merge(MinimizationClass one, MinimizationClass two) {
+    	
+    	String output="";
+       
+        //find redundant Test Statements
+    	ArrayList<MinimizationClass> minimizer = null;
+    	
+        Set<String> redundant= new HashSet<>();
+        ArrayList<String> outputSet = new ArrayList<>();
 
+               
+				output = "";
+				int mIndex = 0;
+				boolean matched = false;
+				for(int x=0;x<one.stmts.size();x++){
+					String l1 = one.stmts.get(x);
+					for(int y = mIndex; y < two.stmts.size();y++) {
+						String l2 = two.stmts.get(y);
+						if (l1.equals(l2)) matched = true;
+					}
+					if (matched && !outputSet.contains(l1)) {
+						outputSet.add(l1);
+						output += l1;
+						for(int y = mIndex; y < two.stmts.size(); y++) {
+							mIndex++;
+							String l2 = two.stmts.get(y);
+							if (l1.equals(l2)) {
+								break;
+							}
+							outputSet.add(l2);
+							output += l2;
+						}
+					} else if (!outputSet.contains(l1)) {
+						outputSet.add(l1);
+						output += l1;
+					}
+					matched = false;
+				}
+				for(int y = 0; y < two.stmts.size(); y++) {
+					String l2 = two.stmts.get(y);
+					if (!outputSet.contains(l2)) {
+						outputSet.add(l2);
+						output += l2;
+					}
+				}
+				String mergedMethodName=one.name+"_"+two.name;
+				
+				System.out.println("--------------------------------");
+		
+				System.out.println(one.name);
+				System.err.println(two.name);
+					
+				
+				
+				//System.out.println(output);
+				MinimizationClass mc = new MinimizationClass(mergedMethodName, outputSet);
+				System.out.println("--------------------------------");
+				return mc;
+			}
+		
+    public static boolean shouldMerge(MinimizationClass one, MinimizationClass two) {             
+				for(int x=0;x<one.stmts.size();x++){
+					String l1 = one.stmts.get(x);
+					for(int y = 0; y < two.stmts.size();y++) {
+						String l2 = two.stmts.get(y);
+						if (l1.equals(l2)) return true;
+					}
+				}
+				return false; 
+    }
+   
 }
