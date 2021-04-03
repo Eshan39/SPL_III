@@ -25,7 +25,7 @@ import java.io.IOException;
 
 
 public class MethodParser {
-    public static void listOfMethod(File projectDir) {
+    public void listOfMethod(File projectDir) {
     	
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
             System.out.println(path);
@@ -112,6 +112,8 @@ public class MethodParser {
     				break;
     			}
     		}
+            
+            System.out.println("Show assertion of minimized class--------------------------------------");
             for (String line : minimizer.get(minimizer.size()-1).stmts) 
             { 
                 if(line.contains("assert")) {
@@ -171,16 +173,16 @@ public class MethodParser {
 				}
 				String mergedMethodName=one.name+"_"+two.name;
 				
-				System.out.println("--------------------------------");
+//				System.out.println("--------------------------------");
 		
-				System.out.println(one.name);
-				System.err.println(two.name);
+//				System.out.println(one.name);
+//				System.err.println(two.name);
 					
 				
-				
-				//System.out.println(output);
+				System.out.println(mergedMethodName);
+				System.out.println(output);
 				MinimizationClass mc = new MinimizationClass(mergedMethodName, outputSet);
-				System.out.println("--------------------------------");
+//				System.out.println("--------------------------------");
 				return mc;
 			}
 		

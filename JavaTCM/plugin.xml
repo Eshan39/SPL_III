@@ -43,6 +43,11 @@
                   id="JavaTCM.menus.sampleCommand"
                   mnemonic="S">
             </command>
+            <command
+                  commandId="JavaTCM.commands.RedundantHandler"
+                  id="JavaTCM.menus.RedundantHandler"
+                  mnemonic="S">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -54,6 +59,11 @@
                   commandId="JavaTCM.commands.sampleCommand"
                   icon="icons/sample.png"
                   tooltip="Say hello world">
+            </command>
+            <command
+                  commandId="JavaTCM.commands.RedundantHandler"
+                  id="JavaTCM.menus.RedundantHandler"
+                  mnemonic="S">
             </command>
          </toolbar>
       </menuContribution>
